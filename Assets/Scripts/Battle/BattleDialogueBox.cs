@@ -47,6 +47,17 @@ public class BattleDialogueBox : MonoBehaviour
                 actionTexts[i].color = Color.white;
         }
     }
+
+    public void resetActionSelection() {
+        for(int i = 0; i < actionTexts.Count;i++) {
+            actionTexts[i].color = Color.white;
+        }
+    }
+    public void resetMoveSelection() {
+        for(int i = 0; i < moveTexts.Count;i++) {
+            moveTexts[i].color = Color.white;
+        }
+    }
     public void UpdateMoveSelection(int currentMove, Move move) {
         for(int i = 0; i < moveTexts.Count;i++) {
             if(i == currentMove)

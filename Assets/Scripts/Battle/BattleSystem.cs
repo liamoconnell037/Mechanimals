@@ -2,7 +2,6 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 public class BattleSystem : MonoBehaviour
@@ -30,6 +29,11 @@ public class BattleSystem : MonoBehaviour
     }
 
     public IEnumerator SetupBattle() {
+        state = BattleState.Busy;
+        currentAction = 0;
+        currentMove = 0;
+        dialogue.resetActionSelection();
+        dialogue.resetMoveSelection();
         playerUnit.Setup(playerParty.GetHealthyMechanimal());
         playerHud.SetData(playerUnit.Mechanimal);
         playerHud.UpdateEn();
@@ -231,10 +235,20 @@ public class BattleSystem : MonoBehaviour
             // } else if(currentAction == 3) { // bag
 
             } else { // run
-                yield return dialogue.TypeDialogue("You ran away...");
-                yield return new WaitForSeconds(0.5f);
-                OnBattleOver(false);
+                if(UnityEngine.Random.Range(1, 3) <= 1) {
+                    yield return dialogue.TypeDialogue("You ran away...");
+                    yield return new WaitForSeconds(0.5f);
+                    OnBattleOver(false);
+                }
+                else {
+                    yield return dialogue.TypeDialogue("You failed to run away...");
+                    yield return new WaitForSeconds(0.5f);
+                    enemyUnit.Mechanimal.AddEn(1);
+                    enemyHud.UpdateEn();
+                    StartCoroutine(PerformEnemyMove());
+                }   
             }
+            
         }
     }
 }
